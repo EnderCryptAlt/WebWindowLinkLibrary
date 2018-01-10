@@ -36,10 +36,7 @@ public class WebWindowLinkApplication extends ActivatableClass<WebWindowLinkAppl
 
 	public WebWindowLinkApplication()
 	{
-		if (Desktop.isDesktopSupported() == false)
-		{
-			throw new MissingDesktopSupport("Desktop support is missing on this device");
-		}
+
 	}
 
 	public void setCallback(WebWindowLinkCallback callback)
@@ -93,7 +90,10 @@ public class WebWindowLinkApplication extends ActivatableClass<WebWindowLinkAppl
 	public void start() throws IOException
 	{
 		start(new Instance());
-		open();
+		if (Desktop.isDesktopSupported())
+		{
+			open();
+		}
 	}
 
 	public int getWebPort()
@@ -131,6 +131,10 @@ public class WebWindowLinkApplication extends ActivatableClass<WebWindowLinkAppl
 
 	private void open() throws IOException
 	{
+		if (Desktop.isDesktopSupported() == false)
+		{
+			throw new MissingDesktopSupport("Desktop support is missing on this device");
+		}
 		Desktop desktop = Desktop.getDesktop();
 		URI uri;
 		try
