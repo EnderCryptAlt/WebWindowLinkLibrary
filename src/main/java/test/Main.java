@@ -14,9 +14,11 @@ import net.ddns.endercrypt.webwindowlink.server.web.transfer.WebResponse;
 
 public class Main
 {
+	private static WebWindowLinkApplication webWindowLinkApplication;
+
 	public static void main(String[] args) throws IOException
 	{
-		WebWindowLinkApplication webWindowLinkApplication = new WebWindowLinkApplication();
+		webWindowLinkApplication = new WebWindowLinkApplication();
 
 		webWindowLinkApplication.setCallback(new WebApp());
 
@@ -50,9 +52,15 @@ public class Main
 		}
 
 		@Override
-		public void onShutdown()
+		public void onDisconnect()
 		{
 			System.out.println("WebLink was exited, shutting down app");
+			webWindowLinkApplication.stop();
+		}
+
+		@Override
+		public void onShutdown()
+		{
 			System.exit(0);
 		}
 	}
