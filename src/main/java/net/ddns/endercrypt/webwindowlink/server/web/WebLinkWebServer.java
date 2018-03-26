@@ -47,19 +47,33 @@ public class WebLinkWebServer extends NanoHTTPD
 			Method method = session.getMethod();
 			UriArray uriArray = new UriArray(session.getUri());
 			LOGGER.info("recieved HTTP request METHOD: " + method + " at " + uriArray);
+			WebRequest webRequest = new WebRequest().new Builder()
+					.importFrom(session)
+					.get();
 			String resourcePath = resources.get(uriArray);
+			Response response = null;
 			if (resourcePath == null)
 			{
-				return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.NOT_FOUND, NanoHTTPD.MIME_PLAINTEXT, "the uri " + uriArray.getFullPath() + " was not found!");
+				LOGGER.fine("preparing to respond with raw request: " + resourcePath);
+				// callback
+				WebWindowLinkCallback callback = application.getCallback();
+				Objects.requireNonNull(callback);
+				LOGGER.fine("getting response object...");
+				response = callback.handleRawRequest(webRequest, uriArray);
 			}
-			LOGGER.fine("preparing to respond with resource: " + resourcePath);
-			String output = WebLinkUtil.readResourceAsString(resourcePath);
-			LOGGER.fine("modifying html for sending...");
-			output = assembleOutput(output, new WebRequest().new Builder()
-					.importFrom(session)
-					.get());
-			LOGGER.fine("assembling response object...");
-			Response response = NanoHTTPD.newFixedLengthResponse(output);
+			else
+			{
+				LOGGER.fine("preparing to respond with resource: " + resourcePath);
+				String output = WebLinkUtil.readResourceAsString(resourcePath);
+				if (uriArray.getFullPath().equals("/"))
+				{
+					LOGGER.fine("modifying index for sending...");
+					output = assembleOutput(output, webRequest);
+				}
+				LOGGER.fine("assembling response object...");
+				response = NanoHTTPD.newFixedLengthResponse(output);
+			}
+			Objects.requireNonNull(response);
 			LOGGER.fine("preparing headers...");
 			String headers = WebLinkUtil.readResourceAsString("headers.txt");
 			for (String headerEntry : headers.split("\n"))
@@ -105,6 +119,9 @@ public class WebLinkWebServer extends NanoHTTPD
 
 		// handle
 		WebResponse webResponse = callback.handleHtmlRequest(webRequest);
+
+		// no null
+		Objects.requireNonNull(webResponse);
 
 		// key
 		text = text.replace("[META_WS_KEY]", instance.key);

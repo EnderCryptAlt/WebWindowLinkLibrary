@@ -6,9 +6,12 @@ import javax.swing.JOptionPane;
 
 import org.json.JSONObject;
 
+import fi.iki.elonen.NanoHTTPD;
+import fi.iki.elonen.NanoHTTPD.Response;
 import net.ddns.endercrypt.webwindowlink.JsonEventListener;
 import net.ddns.endercrypt.webwindowlink.WebWindowLinkApplication;
 import net.ddns.endercrypt.webwindowlink.WebWindowLinkCallback;
+import net.ddns.endercrypt.webwindowlink.server.UriArray;
 import net.ddns.endercrypt.webwindowlink.server.web.transfer.WebRequest;
 import net.ddns.endercrypt.webwindowlink.server.web.transfer.WebResponse;
 
@@ -32,6 +35,8 @@ public class Main
 				JOptionPane.showMessageDialog(null, json.getString("text"));
 			}
 		});
+
+		webWindowLinkApplication.openBrowser();
 	}
 
 	private static class WebApp implements WebWindowLinkCallback
@@ -49,6 +54,13 @@ public class Main
 			response.setHead("<title>HAI</title>");
 			response.setBody("<input type='button' value='popup!' onClick=\"sendEvent('popup',{text: document.getElementById('in').value})\"></input><input id='in' value='put text here'></input>");
 			return response;
+		}
+
+		@Override
+		public Response handleRawRequest(WebRequest request, UriArray uriArray)
+		{
+			// TODO Auto-generated method stub
+			return NanoHTTPD.newFixedLengthResponse("request: " + uriArray.getFullPath());
 		}
 
 		@Override

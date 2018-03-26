@@ -2,11 +2,15 @@ package net.ddns.endercrypt.webwindowlink.server.web.transfer;
 
 import java.util.Objects;
 
+import fi.iki.elonen.NanoHTTPD.Response;
+
 public class WebResponse
 {
 	private String head = "";
 
 	private String body = "";
+
+	private Response response;
 
 	// stringbuilder //
 
@@ -34,6 +38,15 @@ public class WebResponse
 		this.body = body;
 	}
 
+	/**
+	 * Response will override any body/head
+	 * @param response
+	 */
+	public void setResponse(Response response)
+	{
+		this.response = response;
+	}
+
 	// get //
 
 	public String getHead()
@@ -44,5 +57,10 @@ public class WebResponse
 	public String getBody()
 	{
 		return body;
+	}
+
+	public Response getResponse()
+	{
+		return response;
 	}
 }
