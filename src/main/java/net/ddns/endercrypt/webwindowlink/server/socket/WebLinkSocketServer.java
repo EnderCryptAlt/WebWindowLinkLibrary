@@ -130,7 +130,8 @@ public class WebLinkSocketServer extends WebSocketServer
 		instance.webSockets.remove(webSocket);
 		if (instance.webSockets.size() == 0)
 		{
-			application.stop();
+			// application.stop();
+			application.getCallback().onDisconnect();
 		}
 	}
 }

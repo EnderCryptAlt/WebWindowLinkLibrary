@@ -9,5 +9,7 @@ public interface WebWindowLinkCallback
 
 	public WebResponse handleHtmlRequest(WebRequest request);
 
+	public void onDisconnect();
+
 	public void onShutdown();
 }
