@@ -90,10 +90,6 @@ public class WebWindowLinkApplication extends ActivatableClass<WebWindowLinkAppl
 	public void start() throws IOException
 	{
 		start(new Instance());
-		if (Desktop.isDesktopSupported())
-		{
-			open();
-		}
 	}
 
 	public int getWebPort()
@@ -129,7 +125,7 @@ public class WebWindowLinkApplication extends ActivatableClass<WebWindowLinkAppl
 		return assembleUrl("ws", getSocketPort());
 	}
 
-	private void open() throws IOException
+	public void openBrowser() throws IOException
 	{
 		if (Desktop.isDesktopSupported() == false)
 		{
