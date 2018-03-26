@@ -1,5 +1,7 @@
 package net.ddns.endercrypt.webwindowlink;
 
+import java.io.IOException;
+
 import fi.iki.elonen.NanoHTTPD.Response;
 import net.ddns.endercrypt.webwindowlink.server.UriArray;
 import net.ddns.endercrypt.webwindowlink.server.web.transfer.WebRequest;
@@ -11,7 +13,7 @@ public interface WebWindowLinkCallback
 
 	public WebResponse handleHtmlRequest(WebRequest request);
 
-	public Response handleRawRequest(WebRequest request, UriArray uriArray);
+	public Response handleRawRequest(WebRequest request, UriArray uriArray) throws IOException;
 
 	public void onDisconnect();
 
